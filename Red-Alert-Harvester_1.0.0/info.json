@@ -4,7 +4,7 @@
   "title": "Red Alert Harvester",
   "author": "Daikael",
   "contact": "",
-  "homepage": "",
+  "homepage": "https://github.com/Daikael/Red-Alert-Harvesters/tree/master/Red-Alert-Harvester_1.0.0",
   "description": "Automated, animated resource harvesting trucks and refineries from Red Alert.",
   "dependencies": ["base >= 0.18.27"],
   "factorio_version": "0.18"
