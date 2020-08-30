@@ -88,10 +88,10 @@ local animation_speed = 60
             layers =
             {
               {
-                    width = 1,
-                    height = 1,
+                    width = 140,
+                    height = 110,
                     frame_count = 1,
-                    direction_count = 32,
+                    direction_count = 64,
                     shift = {0.0, -0.1875},
                     animation_speed = 8,
                     max_advance = 0.2,
@@ -99,9 +99,9 @@ local animation_speed = 60
                     stripes =
                     {
                         {
-                            filename = "__Red-Alert-Harvester__/graphics/entity/transparent.png",
-                            width_in_frames = 1,
-                            height_in_frames = 64,
+                            filename = "__Red-Alert-Harvester__/graphics/entity/harvester/harv-sheet.png",
+                            width_in_frames = 8,
+                            height_in_frames = 8,
 						},
                     }
                 },
