@@ -50,6 +50,6 @@ function Surface.find_all_entities(search_criteria)
 	return result
 end
 local tibres = 'entity.prototype.resource_category == "basic-solid-tiberium"'
-function Search.tiberium()
-	Surface.find_all_entities(type == tibres)			
+function Surface.tiberium()
+	Surface.find_all_entities({type = tibres})
 end

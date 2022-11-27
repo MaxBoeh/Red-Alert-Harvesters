@@ -11,7 +11,7 @@ local animation_speed = 60
 local tibdec = {-10, 10}
 local tibperc = {-50, 60}
 local damagetype = "laser"
-if game.active_mods["Factorio-Tiberium"] then
+if mods["Factorio-Tiberium"] then
 	damagetype = "tiberium"
 end
 

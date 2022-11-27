@@ -88,23 +88,25 @@ function On_Tick()
 	for _, player in pairs(game.connected_players) do
 		local vehicle = player.vehicle
 		if vehicle and (vehicle.name == 'cncharvester' or vehicle.name == 'cncharvester-ai' or vehicle.name == 'cncharvester-type2' or vehicle.name == 'cncharvester-type2-ai') then
-			local ore = vehicle.surface.find_entities_filtered {
+			local surface = vehicle.surface
+			local ore = surface.find_entities_filtered {
 				type = "resource",
 				area = getBoundingBox(vehicle.position, 2)
 			}
 			for _, entity in pairs(ore) do
 				if (entity.prototype.resource_category == "basic-solid") or (entity.prototype.resource_category == "basic-solid-tiberium") then
-					for i = 1, 2 do
-						if entity.valid and vehicle.can_insert{name=entity.prototype.name} then
+					if entity.prototype.mineable_properties and entity.prototype.mineable_properties.minable and entity.prototype.mineable_properties.products then
+						local itemStack = {name = entity.prototype.mineable_properties.products[1].name, count = entity.prototype.mineable_properties.products[1].amount or 1}
+						if entity.valid and vehicle.can_insert(itemStack) then
 							entity.mine({inventory = vehicle.get_inventory(defines.inventory.car_trunk)})
 						else
-							rendering.draw_text{text="Inventory full", target=player.vehicle, surface=vehicle.surface.name, scale=1.4, scale_with_zoom=true, color={r = 1, g = 1, b = 1, a = 1}, time_to_live=20}
+							rendering.draw_text{text="Inventory full", target=player.vehicle, surface=surface, scale=1.4, scale_with_zoom=true, color={r = 1, g = 1, b = 1, a = 1}, time_to_live=20}
 						end
 					end
 				end
 			end
 			-- find refinery's within a 4x4 square centered around the vehicle
-			local refineries = vehicle.surface.find_entities_filtered {
+			local refineries = surface.find_entities_filtered {
 				name = "refinery",
 				area = getBoundingBox(vehicle.position, 5)
 			}
