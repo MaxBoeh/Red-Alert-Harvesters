@@ -1,23 +1,23 @@
---[[local result = {}
+local result = {}
 local Surface = {}
 
 function Surface.lookup(surface)
 	for chunk in surface.get_chunks() do
- 	   local resources = surface.find_entities_filtered({area=chunk.area, blah})
-  	   for _, entity in pairs(resources) do
-   	     if (entity.prototype.resource_category == "basic-solid") or
-    	        (entity.prototype.resource_category == "basic-solid-tiberium") then
-     	         for _, resources in pairs(resources) do
-      	          if type(resources) == 'string' then
-       	           if game.surfaces[resources] then
-        	              table.insert(result, game.surfaces[resources])
-         	         end
-          	    elseif type(resources) == 'table' and resources['__self'] then
-           	       table.insert(result, resources)
-            	  end
-        	  end
-         	 return result
-    		end
+		local resources = surface.find_entities_filtered({area=chunk.area, blah})
+		for _, entity in pairs(resources) do
+			if (entity.prototype.resource_category == "basic-solid") or
+					(entity.prototype.resource_category == "basic-solid-tiberium") then
+				for _, resources in pairs(resources) do
+					if type(resources) == 'string' then
+						if game.surfaces[resources] then
+							table.insert(result, game.surfaces[resources])
+						end
+					elseif type(resources) == 'table' and resources['__self'] then
+						table.insert(result, resources)
+					end
+				end
+				return result
+			end
 		end
 	end
 end
@@ -25,7 +25,7 @@ end
 function Surface.find_all_entities(search_criteria)
 	Core.fail_if_missing(search_criteria, "missing search_criteria argument")
 	if search_criteria.name == nil and search_criteria.type == nil and search_criteria.area == nil then
-		error("Missing search criteria field: name or type  or area of entity", 2)
+		error("Missing search criteria field: name or type	or area of entity", 2)
 	end
 
 	local surface_list = Surface.lookup(search_criteria.surface)
@@ -51,6 +51,5 @@ function Surface.find_all_entities(search_criteria)
 end
 local tibres = 'entity.prototype.resource_category == "basic-solid-tiberium"'
 function Search.tiberium()
-	Surface.find_all_entities(type == tibres)
-				
-end]]
+	Surface.find_all_entities(type == tibres)			
+end

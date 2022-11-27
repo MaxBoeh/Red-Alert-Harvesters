@@ -1,5 +1,5 @@
 require "utilities"
-require "cncharvesterstats"
+require "harvesterstats"
 require "refinery"
 local autocncharvestertesting = settings.startup["Auto-cncharvester-testing"].value
 
@@ -29,8 +29,7 @@ StateUsesEnergy = {
 	[States.Refueling] = false,
 }
 
-cncharvester = (
-	if autocncharvestertesting == true then
+if autocncharvestertesting then cncharvester = {
 	New = function(entity)
 		local self = {
 			vehicle = entity,
@@ -82,8 +81,8 @@ cncharvester = (
 	
 		return self
 	end,
-  
-	Delete == function(self)
+
+	Delete = function(self)
 		-- Remove the driver
 		if self.driver and self.driver.valid then
 			self.vehicle.passenger = nil
@@ -103,14 +102,12 @@ cncharvester = (
 		end
 	end,
 	
-	Onload == function(self)
+	Onload = function(self)
 		setmetatable(self, {__index=cncharvester})
 		cncharvesterAnimator.Onload(self.animationState)
 	end,
-		
-  
-	Tick == function(self)
 	
+	Tick = function(self)
 		-- Kick any players that entered.
 		self.animEntity.passenger = nil
 		
@@ -125,18 +122,18 @@ cncharvester = (
 		cncharvester.StateFunctions[st](self)
 	end,
 	
-	ErrorDump == function(self)
+	ErrorDump = function(self)
 		game.player.print("self.currentOrientation = " .. self.currentOrientation)
 		game.player.print("self.state = " .. self.state)
 		self.animationState:ErrorDump()
 	end,
 	
-	FloatingText == function(self, text, color)
+	FloatingText = function(self, text, color)
 		local color = color or {r = 1, g = 1, b = 1}
 		game.surfaces.nauvis.create_entity({name="flying-text", position=self.vehicle.position, text=text, color=color})
 	end,
 	
-	CheckFuel == function(self)
+	CheckFuel = function(self)
 		if self.currentEnergy <= 0 then
 			self:UseFuel()
 		end
@@ -151,7 +148,7 @@ cncharvester = (
 		return self.currentEnergy > 0
 	end,
 	
-	UseFuel == function(self)
+	UseFuel = function(self)
 		local fuelInv = self.vehicle.get_inventory(defines.inventory.fuel)
 		-- We are currently low of fuel.
 		if fuelInv.get_item_count() < 10 then
@@ -178,7 +175,7 @@ cncharvester = (
 		end
 	end,
 	
-	RefuelFromInventory == function(self, inventory)
+	RefuelFromInventory = function(self, inventory)
 		local fuelName = false
 		local fuelCount = 0
 		-- Find out which fuel we're currently using.
@@ -219,11 +216,11 @@ cncharvester = (
 		return false
 	end,
 	
-	RefuelFromHold == function(self)
+	RefuelFromHold = function(self)
 		self:RefuelFromInventory(self.vehicle.get_inventory(2))
 	end,
 	
-	SetIsFilled == function(self, isFilled)
+	SetIsFilled = function(self, isFilled)
 		self.filled = isFilled
 -- 		if self.filled then
 -- 			self.driver.color = {r = 1, g = 1, b = 0, a = 0.8}
@@ -232,7 +229,7 @@ cncharvester = (
 -- 		end
 	end,
 	
-	SetTargetPosition == function(self, position, onArrivalCallback)
+	SetTargetPosition = function(self, position, onArrivalCallback)
 		self.targetPosition = position
 		local dPos = vector.subtract(position, self.vehicle.position)
 		self.targetDistance = vector.length(dPos)
@@ -245,11 +242,11 @@ cncharvester = (
 		--game.player.print("Moving to location {" .. position.x .. ", " .. position.y .. "}")
 	end,
 	
-	SetTargetOrientation == function(self, orientation)
+	SetTargetOrientation = function(self, orientation)
 		self.targetOrientation = orientation
 	end,
 	
-	FindRandomOreInRadius == function(self, radius)
+	FindRandomOreInRadius = function(self, radius)
 		if radius ~= lastOreRadius then
 			self.lastOreRadius = lastOreRadius
 			self.oresInRadius = game.player.surface.find_entities_filtered{type = "resource", area = GetBoundingBox(self.vehicle.position, radius)}
@@ -296,7 +293,7 @@ cncharvester = (
 -- 		return false
 -- 	end,
 
-	FindOresInRadius == function(self, radius)
+	FindOresInRadius = function(self, radius)
 		local results = game.player.surface.find_entities_filtered{type = "resource", area = GetBoundingBox(self.vehicle.position, radius)}
 		local ores = {}
 		--for i = #results, 1, -1 do
@@ -319,22 +316,22 @@ cncharvester = (
 		return ores
 	end,
 	
-	PlayAnimation == function(self, animation)
+	PlayAnimation = function(self, animation)
 		--game.player.print("Requesting animation (" .. animation .. ")")
 		self.oldState = self.state
 		self.state = States.Animating
 		self.animationState:PlayAnimation(animation, function(self) self.state = self.oldState end)
 	end,
 	
-	StateFunctions == {
+	StateFunctions = {
 		--------------------------------------------------++--------------------------------------------------
-		--										  	   Animating											--
+		--											   Animating											--
 		--------------------------------------------------++--------------------------------------------------
 		[States.Animating] = function(self)
 			self.animationState:Tick()
 		end,
 		--------------------------------------------------++--------------------------------------------------
-		--										  	  FindingOre											--
+		--											  FindingOre											--
 		--------------------------------------------------++--------------------------------------------------
 		[States.FindingOre] = function(self)
 			--self:FloatingText("FindingOre")
@@ -362,7 +359,7 @@ cncharvester = (
 			self.scoopsMined = 0
 		end,
 		--------------------------------------------------++--------------------------------------------------
-		--										  	   MiningOre											--
+		--											   MiningOre											--
 		--------------------------------------------------++--------------------------------------------------
 		[States.MiningOre] = function(self)
 			--self:FloatingText("MiningOre")
@@ -600,6 +597,6 @@ cncharvester = (
 			-- We didn't find any fuel, so find another refinery.
 			self.state = States.FindingRefuelRefinery
 		end,
-		}
+	}
+}
 end
-)

@@ -19,26 +19,26 @@ end
 
 
 function getFuelsSortedByValue(tbl, sortFunction)
-    local fuelname = {}
-    local fuelvalue = {}
-    local fuel_list = {}
+	local fuelname = {}
+	local fuelvalue = {}
+	local fuel_list = {}
 
-    for _, proto in pairs(game.get_filtered_item_prototypes({{filter = "fuel-category", ["fuel-category"] = "chemical"}})) do
-        if proto.fuel_value > 0 then
-            fuel_list[proto.name] = proto.stack_size
-        end
-    end
+	for _, proto in pairs(game.get_filtered_item_prototypes({{filter = "fuel-category", ["fuel-category"] = "chemical"}})) do
+		if proto.fuel_value > 0 then
+			fuel_list[proto.name] = proto.stack_size
+		end
+	end
 
 	for fuel_name in pairs(fuel_list) do
 		if contents[fuel_name] then
 			table.sort(fuelvalue, function(a, b)
 				return sortFunction(tbl[a], tbl[b])
-			  end)
-		  break
+			end)
+			break
 		end
 	end
 
-    return fuelvalue
+	return fuelvalue
 end
 
 function DeltaposToOrientation(dPos)
