@@ -27,7 +27,7 @@ end
 	end
 end ]]
 
---[[function On_Load()
+function On_Load()
 	for _, cncharvester in pairs(global.cncharvesters) do
 		-- Allow it to re-set its metatable.
 		cncharvester.Onload(cncharvester)
@@ -36,9 +36,9 @@ end ]]
 		-- Allow it to re-set its metatable.
 		Refinery.Onload(refinery)
 	end
-end]]
+end
 
---[[function On_Built(event)
+function On_Built(event)
 	local ent = event.created_entity or event.entity
 	if not (entity and entity.valid) then return end
 		if ent.name == "cncharvester" then
@@ -47,9 +47,9 @@ end]]
 	elseif ent.name == "refinery" then
 		table.insert(global.refineries, Refinery.New(ent))
 	end
---end]]
+end
 
---[[function On_Removed(event)
+function On_Removed(event)
 	local ent = event.entity
 	if ent.name == "cncharvester" then
 		for i, cncharvester in pairs(global.cncharvesters) do
@@ -70,7 +70,7 @@ end]]
 	elseif not ent.name == ("cncharvester" and "refinery") then
 		return
 	end
-end]]
+end
 
 script.on_event(defines.events.on_player_driving_changed_state, function(event)
 	local ent = event.entity

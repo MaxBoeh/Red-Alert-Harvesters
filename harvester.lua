@@ -276,22 +276,6 @@ if autocncharvestertesting then cncharvester = {
 		return ore
 	end,
 	
--- 	FindRandomOreInRadius = function(self, radius)
--- 		if self.oresInRadius and #self.oresInRadius > 5 then
--- 			local i = math.random(#self.oresInRadius)
--- 			local ore = self.oresInRadius[i]
--- 			if ore.valid and vector.distsq(ore.position, self.vehicle.position) < (radius * radius) then
--- 				table.remove(self.oresInRadius, i)
--- 				return ore
--- 			end
--- 		end
--- 		--self.oresInRadius = self:FindOresInRadius(radius)
--- 		if #self.oresInRadius > 0 then
--- 			--return self.oresInRadius[math.random(#self.oresInRadius)]
--- 		end
--- 		
--- 		return false
--- 	end,
 
 	FindOresInRadius = function(self, radius)
 		local results = game.player.surface.find_entities_filtered{type = "resource", area = GetBoundingBox(self.vehicle.position, radius)}
@@ -315,14 +299,27 @@ if autocncharvestertesting then cncharvester = {
 		end
 		return ores
 	end,
-	
-	PlayAnimation = function(self, animation)
-		--game.player.print("Requesting animation (" .. animation .. ")")
+
+	  function PlayAnimation(self, animation)
+		if States.MiningOre == false then
+		  return
+		end
+	  
+		-- determine the orientation of the animation based on the RealOrientation value
+		local orientation = math.floor(self.RealOrientation * 8)
+	  
+		-- save the current state and set the state to States.Animating
 		self.oldState = self.state
 		self.state = States.Animating
-		self.animationState:PlayAnimation(animation, function(self) self.state = self.oldState end)
-	end,
-	
+	  
+		-- play the animation using the animationState operator
+		game.player.print("Requesting animation (" .. animation .. ")")
+		self.animationState:PlayAnimation(animation, function(self)
+		  -- when the animation is finished, set the state back to the old state
+		  self.state = self.oldState
+		end)
+	  end
+	  
 	StateFunctions = {
 		--------------------------------------------------++--------------------------------------------------
 		--											   Animating											--
