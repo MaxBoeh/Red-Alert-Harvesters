@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.1.0
+Date: 2022-12-??
+  Changes:
+    - Updated to 1.1.72
+    - Made code more efficient by implementing a new algorithm for ore mining
+  Fixes:
+    - Fixed a bug with mining volume and frequency, leading to the harvester mining as much is 64 ores in a tick.
+---------------------------------------------------------------------------------------------------
 Version: 1.0.12
 Date: 2021-02-07
   Changes:
