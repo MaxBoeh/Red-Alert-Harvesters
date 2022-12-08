@@ -83,56 +83,6 @@ script.on_event(defines.events.on_player_driving_changed_state, function(event)
 end
 )
 
---[[ function On_Tick()
-for _, player in pairs(game.connected_players) do
-	local vehicle = player.vehicle
-	if vehicle and (vehicle.name == 'cncharvester' or vehicle.name == 'cncharvester-ai' or vehicle.name == 'cncharvester-type2' or vehicle.name == 'cncharvester-type2-ai') then
-		local surface = vehicle.surface
-		local ore = surface.find_entities_filtered {
-			type = "resource",
-			area = getBoundingBox(vehicle.position, 2)
-		}
-		for _, entity in pairs(ore) do
-			if (entity.prototype.resource_category == "basic-solid") or (entity.prototype.resource_category == "basic-solid-tiberium") then
-				if entity.prototype.mineable_properties and entity.prototype.mineable_properties.minable and entity.prototype.mineable_properties.products then
-					local itemStack = {name = entity.prototype.mineable_properties.products[1].name, count = entity.prototype.mineable_properties.products[1].amount or 1}
-					if entity.valid and vehicle.can_insert(itemStack) then
-						entity.mine({inventory = vehicle.get_inventory(defines.inventory.car_trunk)})
-					else
-						rendering.draw_text{text="Inventory full", target=player.vehicle, surface=surface, scale=1.4, scale_with_zoom=true, color={r = 1, g = 1, b = 1, a = 1}, time_to_live=20}
-					end
-				end
-			end
-		end
-		-- find refinery's within a 4x4 square centered around the vehicle
-		local refineries = surface.find_entities_filtered {
-			name = "refinery",
-			area = getBoundingBox(vehicle.position, 5)
-		}
-		if #refineries > 0 then -- if the returned table has at least one entry
-			-- I think this is the correct inventory...I might be wrong
-			local inventory = vehicle.get_inventory(2)
-			local contents = inventory.get_contents()
-			local itemstack = {} -- temp var
-			for name, count in pairs(contents) do
-				itemstack.name = name
-				itemstack.count = count
-				-- loop through found refineries (err on side of caution, a radius of 5 might find more than one refinery)
-				for _, refinery in pairs(refineries) do
-					if refinery.can_insert(itemstack) then -- if this refinery can hold the items
-						refinery.insert(itemstack)
-						inventory.remove(itemstack) -- remove from inventory (the cncharvester)
-						break
-					end
-				end
-			end
-			while get_fuel_inventory(vehicle) find_empty_stack == true then
-				local fuel = fuel_items
-			end
-		end
-	end
-end ]]
-
 local timer = 0
 function On_Tick()
 	-- Create a table to store the names of the cncharvester vehicles
