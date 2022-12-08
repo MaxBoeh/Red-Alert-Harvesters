@@ -7,7 +7,6 @@ Stats = {
 	-- Radii automatically increase if no ore is found.
 	DefaultSearchRadius = 15, -- Starting radius to search for a random ore when at a refinery.
 	CloseMineSearchRadius = 7, -- Starting radius to search for a random ore when it's just finished scooping a location. Lower will result in less driving between scoops.
-	MiningRadius = 1.1, -- Radius in which to search for ores when currently scooping.
 	
 	EnergyUsedPerTick = 1200000 / 60, -- 1200kW. Energy is only consumed when animating or driving.
 	
