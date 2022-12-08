@@ -155,7 +155,6 @@ function On_Tick()
 
 			-- Increment the timer and reset it if it reaches 10
 			timer = timer + 1
-			print(timer)
 			if timer >= 10 then
 				timer = 0  -- Reset the timer
 				for _, entity in pairs(ore) do
