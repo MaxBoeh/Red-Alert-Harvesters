@@ -4,6 +4,7 @@ Date: 2022-12-??
   Changes:
     - Updated to 1.1.72
     - Made code more efficient by implementing a new algorithm for ore mining
+    - Added setting to change default harvester activation configuration
   Fixes:
     - Fixed a bug with mining volume and frequency, leading to the harvester mining as much is 64 ores in a tick.
 ---------------------------------------------------------------------------------------------------
