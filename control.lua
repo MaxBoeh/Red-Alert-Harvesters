@@ -30,9 +30,9 @@ end
 end ]]
 
 function On_Load()
-	for _, cncharvester in pairs(global.cncharvesters) do
+	for _, harvester in pairs(global.cncharvesters) do
 		-- Allow it to re-set its metatable.
-		cncharvester.Onload(cncharvester)
+		cncharvester.Onload(harvester)
 	end
 	for _, refinery in pairs(global.refineries) do
 		-- Allow it to re-set its metatable.
@@ -161,7 +161,7 @@ end
 
 script.on_nth_tick(60, On_Tick_Driving_Players)
 
-if autocncharvestertesting then
+if autocncharvestertesting and global.cncharvesters then
 	script.on_nth_tick(1, function() 
 		for _, harvester in pairs(global.cncharvesters) do
 			-- game.print(_ .. ': ' .. serpent.block(harvester))
