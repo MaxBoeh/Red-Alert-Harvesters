@@ -507,7 +507,7 @@ cncharvester = {
 			-- If the refinery is still there and we can dump the complete contents of our cargo hold.
 			local targetRefinery = Refinery.GetByUnitNumber(self.targetRefinery)
 			if targetRefinery.entity.valid then
-				if targetRefinery.GetAvailableSlots() > Stats.cncharvesterCargoSlots then
+				if targetRefinery:GetAvailableSlots() > Stats.cncharvesterCargoSlots then
 					for itemname, count in pairs(inv.get_contents()) do
 						local stack = {name = itemname, count = count}
 						-- Dump our inventory into the refinery.
