@@ -30,21 +30,22 @@ end
 end ]]
 
 function On_Load()
-	for _, harvester in pairs(global.cncharvesters) do
-		-- Allow it to re-set its metatable.
-		cncharvester.Onload(harvester)
-	end
 	for _, refinery in pairs(global.refineries) do
 		-- Allow it to re-set its metatable.
 		Refinery.Onload(refinery)
 	end
+	for _, harvester in pairs(global.cncharvesters) do
+		-- Allow it to re-set its metatable.
+		cncharvester.Onload(harvester)
+	end
 end
+script.on_load(On_Load)
 
 function On_Built(event)
 	local ent = event.created_entity or event.entity
 	if not (ent and ent.valid) then return end
 	if ent.name == "cncharvester" or ent.name == "cncharvester-type2" then
-		table.insert(global.cncharvesters, cncharvester.New(ent))
+		global.cncharvesters[ent.unit_number] = cncharvester.New(ent)
 	elseif ent.name == "refinery" then
 		global.refineries[ent.unit_number] = Refinery.New(ent)
 	end
@@ -161,11 +162,12 @@ end
 
 script.on_nth_tick(60, On_Tick_Driving_Players)
 
-if autocncharvestertesting and global.cncharvesters then
+if autocncharvestertesting then
 	script.on_nth_tick(1, function() 
-		for _, harvester in pairs(global.cncharvesters) do
-			-- game.print(_ .. ': ' .. serpent.block(harvester))
-			harvester:Tick()
+		if global.cncharvesters then
+			for _, harvester in pairs(global.cncharvesters) do
+				harvester:Tick()
+			end
 		end
 	end)
 end

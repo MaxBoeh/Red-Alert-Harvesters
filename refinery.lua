@@ -36,6 +36,10 @@ Refinery = {
 	--										   Static functions											--
 	--------------------------------------------------++--------------------------------------------------
 	-- Static functions.
+	GetByUnitNumber = function(unitNumber) 
+		return global.refineries[unitNumber]
+	end,
+
 	NearestUnoccupied = function(position)
 		return Refinery.NearestWithCondition(
 			position, 

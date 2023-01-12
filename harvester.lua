@@ -468,7 +468,7 @@ cncharvester = {
 				return
 			end
 			
-			self.targetRefinery = refinery
+			self.targetRefinery = refinery.entity.unit_number
 		
 			-- Move towards an approach position.
 			self:SetTargetPosition(Vector.add(refinery.entity.position, Stats.RefineryApproachOffset), function(self) self.state = States.ApproachedRefinery end)
@@ -482,13 +482,14 @@ cncharvester = {
 		[States.ApproachedRefinery] = function(self)
 			--self:FloatingText("ApproachedRefinery")
 			-- Check if it's still there.
-			if self.targetRefinery.entity.valid and not self.targetRefinery:IsFull()then
+			local targetRefinery = Refinery.GetByUnitNumber(self.targetRefinery)
+			if targetRefinery.entity.valid and not targetRefinery:IsFull()then
 				-- Wait until the refinery is free if it isn't currently.
-				if not self.targetRefinery:IsOccupied() then
-					self.targetRefinery:Reserve()
+				if not targetRefinery:IsOccupied() then
+					targetRefinery:Reserve()
 					self.reservedRefinery = true
 					-- Move onto the pad.
-					self:SetTargetPosition(Vector.add(self.targetRefinery.entity.position, Stats.RefineryDumpOffset), function(self) self.state = States.DroppingOre end)
+					self:SetTargetPosition(Vector.add(targetRefinery.entity.position, Stats.RefineryDumpOffset), function(self) self.state = States.DroppingOre end)
 					--self.nextState = States.DroppingOre
 					self.state = States.MovingToLocation
 				end
@@ -504,12 +505,13 @@ cncharvester = {
 			--self:FloatingText("DroppingOre")
 			local inv = self.vehicle.get_inventory(2)
 			-- If the refinery is still there and we can dump the complete contents of our cargo hold.
-			if self.targetRefinery.entity.valid then
-				if Refinery.GetAvailableSlots(self.targetRefinery) > Stats.cncharvesterCargoSlots then
+			local targetRefinery = Refinery.GetByUnitNumber(self.targetRefinery)
+			if targetRefinery.entity.valid then
+				if targetRefinery.GetAvailableSlots() > Stats.cncharvesterCargoSlots then
 					for itemname, count in pairs(inv.get_contents()) do
 						local stack = {name = itemname, count = count}
 						-- Dump our inventory into the refinery.
-						self.targetRefinery.entity.insert(stack)
+						targetRefinery.entity.insert(stack)
 						inv.remove(stack)
 					end
 				else
@@ -525,11 +527,11 @@ cncharvester = {
 			self:SetIsFilled(false)
 			self.searchRadius = Stats.DefaultSearchRadius
 			
-			if self.targetRefinery:HasFuel() then
+			if targetRefinery:HasFuel() then
 				self.state = States.Refueling
 			else
 				self.state = States.FindingOre
-				self.targetRefinery:UnReserve()
+				targetRefinery:UnReserve()
 				self.reservedRefinery = false
 			end
 			
@@ -589,7 +591,7 @@ cncharvester = {
 				return
 			end
 			
-			self.targetRefinery = refinery
+			self.targetRefinery = refinery.entity.unit_number
 		
 			-- Move towards an approach position.
 			self:SetTargetPosition(
@@ -606,13 +608,14 @@ cncharvester = {
 		[States.ApproachedForRefuel] = function(self)
 			--if game.tick % 17 == 0 then self:FloatingText("ApproachedForRefuel") end
 			-- Check if it's still there and if it still has fuel.
-			if self.targetRefinery.entity.valid and Refinery.HasFuel(self.targetRefinery) then
+			local targetRefinery = Refinery.GetByUnitNumber(self.targetRefinery)
+			if targetRefinery.entity.valid and targetRefinery:HasFuel() then
 				-- Wait until the refinery is free if it isn't currently.
-				if not Refinery.IsOccupied(self.targetRefinery) then
-					self.targetRefinery:Reserve()
+				if not targetRefinery:IsOccupied() then
+					targetRefinery:Reserve()
 					self.reservedRefinery = true
 					-- Move onto the pad.
-					self:SetTargetPosition(Vector.add(self.targetRefinery.entity.position, Stats.RefineryDumpOffset), function(self) self.state = States.Refueling end)
+					self:SetTargetPosition(Vector.add(targetRefinery.entity.position, Stats.RefineryDumpOffset), function(self) self.state = States.Refueling end)
 					--self.nextState = States.Refueling
 					self.state = States.MovingToLocation
 				end
@@ -626,13 +629,14 @@ cncharvester = {
 		--------------------------------------------------++--------------------------------------------------
 		[States.Refueling] = function(self)
 			--self:FloatingText("Refueling")
-			if self:RefuelFromInventory(self.targetRefinery.entity.get_inventory(defines.inventory.chest)) then
+			local targetRefinery = Refinery.GetByUnitNumber(self.targetRefinery)
+			if self:RefuelFromInventory(targetRefinery.entity.get_inventory(defines.inventory.chest)) then
 				self.refueling = false
 				if self.vehicle.get_inventory(2).get_item_count() > 0 then
 					self.state = States.DroppingOre
 				else
 					self.state = States.FindingOre
-					self.targetRefinery:UnReserve()
+					targetRefinery:UnReserve()
 					self.reservedRefinery = false
 				end
 				
